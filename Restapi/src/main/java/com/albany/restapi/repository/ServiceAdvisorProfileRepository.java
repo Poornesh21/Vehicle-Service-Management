@@ -3,15 +3,27 @@ package com.albany.restapi.repository;
 
 import com.albany.restapi.model.ServiceAdvisorProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceAdvisorProfileRepository extends JpaRepository<ServiceAdvisorProfile, Integer> {
-    ServiceAdvisorProfile findByUserId(Integer userId);
+    Optional<ServiceAdvisorProfile> findByUserId(Integer userId);
     
-    // Find service advisors by department
     List<ServiceAdvisorProfile> findByDepartment(String department);
     
-    // Find service advisors by specialization
     List<ServiceAdvisorProfile> findBySpecialization(String specialization);
+    
+    @Query("SELECT sp FROM ServiceAdvisorProfile sp JOIN sp.user u WHERE " +
+           "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(sp.department) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(sp.specialization) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<ServiceAdvisorProfile> searchAdvisors(@Param("searchTerm") String searchTerm);
+    
+    @Query("SELECT COUNT(sr) FROM ServiceRequest sr WHERE sr.serviceAdvisorId = :advisorId AND " +
+           "sr.status IN ('Received', 'Diagnosis', 'Repair')")
+    Integer countActiveServicesByAdvisorId(@Param("advisorId") Integer advisorId);
 }
