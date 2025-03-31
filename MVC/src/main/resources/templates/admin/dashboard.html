@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Albany</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>Albany Admin Dashboard</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-4">Welcome, <span th:text="${userName}">Admin</span>!</h4>
+            <p>You're now logged in as an administrator to the Albany Vehicle Service Management System.</p>
+
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h5 class="card-title">Customers</h5>
+                            <p class="card-text">Manage your customer accounts</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-car fa-3x mb-3"></i>
+                            <h5 class="card-title">Vehicles</h5>
+                            <p class="card-text">View and manage all vehicles</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-tools fa-3x mb-3"></i>
+                            <h5 class="card-title">Services</h5>
+                            <p class="card-text">Track service requests</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-invoice-dollar fa-3x mb-3"></i>
+                            <h5 class="card-title">Invoices</h5>
+                            <p class="card-text">Manage payments and invoices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
