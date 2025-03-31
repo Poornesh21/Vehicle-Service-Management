@@ -1,3 +1,4 @@
+// Restapi/src/main/java/com/albany/restapi/controller/AuthController.java
 package com.albany.restapi.controller;
 
 import com.albany.restapi.dto.LoginRequest;
@@ -21,6 +22,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(authService.authenticate(loginRequest));
+        LoginResponse response = authService.authenticate(loginRequest);
+        return ResponseEntity.ok(response);
     }
 }

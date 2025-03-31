@@ -1,12 +1,9 @@
-// Restapi/src/main/java/com/albany/restapi/config/SecurityConfig.java
 package com.albany.restapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,30 +17,14 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
     @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Define security matchers for non-OAuth2 endpoints
-                .securityMatcher("/api/**", "/login", "/error")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/customers/**").permitAll() // Allow access to customer endpoints
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()  // Allow all requests
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
-                .userDetailsService(userDetailsService);
+                .csrf(csrf -> csrf.disable())  // Disable CSRF protection
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -62,7 +43,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
