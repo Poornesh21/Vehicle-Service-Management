@@ -1,3 +1,4 @@
+// Modify MVC/src/main/java/com/albany/mvc/config/SecurityConfig.java
 package com.albany.mvc.config;
 
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/error").permitAll()
+                        .requestMatchers("/customers/**").permitAll() // Allow access to customer pages
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -29,7 +31,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/login", "/oauth2/authorization/**"));  // Ignore CSRF for login paths
+                        .ignoringRequestMatchers("/login", "/oauth2/authorization/**"));
 
         return http.build();
     }
