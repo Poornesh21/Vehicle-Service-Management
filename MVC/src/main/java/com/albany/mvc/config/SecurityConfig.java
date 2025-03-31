@@ -1,4 +1,3 @@
-// Modify MVC/src/main/java/com/albany/mvc/config/SecurityConfig.java
 package com.albany.mvc.config;
 
 import org.springframework.context.annotation.Bean;
@@ -15,23 +14,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/error").permitAll()
-                        .requestMatchers("/customers/**").permitAll() // Allow access to customer pages
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()  // Allow all requests
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/admin/dashboard", true)
-                )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout=true")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
-                )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/login", "/oauth2/authorization/**"));
+                .csrf(csrf -> csrf.disable());  // Disable CSRF for development
 
         return http.build();
     }

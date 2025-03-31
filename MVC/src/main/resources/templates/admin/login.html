@@ -613,34 +613,19 @@
                 </div>
 
                 <!-- Changed form tag to use regular action and GET method -->
-                <form action="/oauth2/authorization/mvc-client" method="get" id="loginForm">
+                <!-- Update the form tag in your login.html -->
+                <form action="/login" method="post" id="loginForm">
                     <div class="form-group">
-                        <input
-                                type="email"
-                                class="form-control"
-                                id="email"
-                                name="email"
-                                placeholder="Email address"
-                                required
-                                autocomplete="off"
-                                th:value="${email}"
-                        />
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email address" required autocomplete="off" />
                         <i class="input-icon fas fa-envelope"></i>
                     </div>
 
                     <div class="form-group">
-                        <input
-                                type="password"
-                                class="form-control"
-                                id="password"
-                                name="password"
-                                placeholder="Password"
-                                required
-                        />
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
                         <i class="input-icon fas fa-lock"></i>
                         <span class="password-toggle" id="togglePassword">
-                <i class="fas fa-eye" id="eyeIcon"></i>
-              </span>
+            <i class="fas fa-eye" id="eyeIcon"></i>
+        </span>
                     </div>
 
                     <div class="form-options">
@@ -653,17 +638,11 @@
                     </div>
 
                     <button type="submit" class="btn-login">
-              <span class="btn-text">
-                <span>Sign in to Dashboard</span>
-                <i class="fas fa-arrow-right"></i>
-              </span>
+        <span class="btn-text">
+            <span>Sign in to Dashboard</span>
+            <i class="fas fa-arrow-right"></i>
+        </span>
                     </button>
-
-                    <div class="login-footer">
-                        <p class="footer-text">
-                            Having trouble signing in? <a href="#" class="footer-link">Contact support</a>
-                        </p>
-                    </div>
                 </form>
             </div>
         </div>
