@@ -612,7 +612,8 @@
                     <span id="alertMessage">Invalid email or password. Please try again.</span>
                 </div>
 
-                <form th:action="@{/oauth2/authorization/mvc-client}" method="post" id="loginForm">
+                <!-- Changed form tag to use regular action and GET method -->
+                <form action="/oauth2/authorization/mvc-client" method="get" id="loginForm">
                     <div class="form-group">
                         <input
                                 type="email"
@@ -673,64 +674,63 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Password toggle
-        $("#togglePassword").click(function() {
-            const passwordField = $("#password");
-            const eyeIcon = $("#eyeIcon");
-
-            if (passwordField.attr("type") === "password") {
-                passwordField.attr("type", "text");
-                eyeIcon.removeClass("fa-eye").addClass("fa-eye-slash");
-            } else {
-                passwordField.attr("type", "password");
-                eyeIcon.removeClass("fa-eye-slash").addClass("fa-eye");
-            }
-        });
-
-        // Login form submission
-        $("#loginForm").submit(function(e) {
-            e.preventDefault();
-
-            const email = $("#email").val();
-            const password = $("#password").val();
-            const rememberMe = $("#rememberMe").prop("checked");
-
-            // Update button state
-            const loginBtn = $(".btn-login");
-            const originalText = loginBtn.html();
-            loginBtn.html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Signing in...');
-            loginBtn.prop("disabled", true);
-
-            // You can replace this with your actual authentication logic
-            $.ajax({
-                url: $(this).attr("action"),
-                type: "POST",
-                data: {
-                    email: email,
-                    password: password,
-                    rememberMe: rememberMe
-                },
-                success: function(response) {
-                    // Redirect to dashboard on success
-                    window.location.href = "/admin/dashboard";
-                },
-                error: function(xhr) {
-                    // Show error message
-                    $("#alertMessage").text(xhr.responseJSON?.message || "Invalid email or password. Please try again.");
-                    $("#loginAlert").show();
-
-                    // Reset button
-                    loginBtn.html(originalText);
-                    loginBtn.prop("disabled", false);
-                }
-            });
-        });
-
         // Check for error parameter in URL
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has("error")) {
-            $("#alertMessage").text("Invalid credentials. Please try again.");
+            const errorType = urlParams.get("error");
+
+            // Check for specific error types or provide more helpful messages
+            if (errorType === "invalid_grant" || errorType === "bad_credentials") {
+                // This usually means password is wrong (when email exists)
+                $("#alertMessage").text("Invalid password. Please check your password and try again.");
+            } else if (errorType === "invalid_token" || errorType === "invalid_client") {
+                // This could mean the credentials don't match any user
+                $("#alertMessage").text("Email not found. Please check your email address.");
+            } else if (errorType === "access_denied") {
+                $("#alertMessage").text("Access denied. Your account may not have appropriate permissions.");
+            } else if (errorType === "unauthorized") {
+                $("#alertMessage").text("Your account is not authorized to access this system.");
+            } else {
+                // Default case
+                $("#alertMessage").text("Authentication failed. Please verify your email and password.");
+            }
+
             $("#loginAlert").show();
+        }
+
+        // For form-based login, you can add simple validation:
+        $("#loginForm").submit(function() {
+            const email = $("#email").val();
+            const password = $("#password").val();
+            let hasError = false;
+
+            // Email format validation
+            if (!isValidEmail(email)) {
+                $("#alertMessage").text("Please enter a valid email address.");
+                $("#loginAlert").show();
+                hasError = true;
+            }
+            // Password length check
+            else if (password.length < 6) {
+                $("#alertMessage").text("Password must be at least 6 characters long.");
+                $("#loginAlert").show();
+                hasError = true;
+            }
+
+            if (hasError) {
+                return false; // Prevent form submission
+            }
+
+            // Show loading button
+            $(".btn-login").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Signing in...');
+            $(".btn-login").prop("disabled", true);
+            return true;
+        });
+
+        // Email validation helper function
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
     });
 </script>
