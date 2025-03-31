@@ -27,38 +27,3 @@ public class CustomerController {
     }
 }
 
-@RestController
-@RequestMapping("/api/customers")
-class CustomerApiController {
-
-    private final CustomerService customerService;
-
-    public CustomerApiController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
-
-    @GetMapping
-    public List<CustomerDTO> getAllCustomers() {
-        return customerService.getAllCustomers();
-    }
-
-    @GetMapping("/{id}")
-    public CustomerDTO getCustomerById(@PathVariable("id") Integer customerId) {
-        return customerService.getCustomerById(customerId);
-    }
-
-    @PostMapping
-    public CustomerDTO createCustomer(@RequestBody CustomerDTO customerDTO) {
-        return customerService.createCustomer(customerDTO);
-    }
-
-    @PutMapping("/{id}")
-    public CustomerDTO updateCustomer(@PathVariable("id") Integer customerId, @RequestBody CustomerDTO customerDTO) {
-        return customerService.updateCustomer(customerId, customerDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable("id") Integer customerId) {
-        customerService.deleteCustomer(customerId);
-    }
-}
